@@ -14,7 +14,7 @@ fn fake_client(_: Request(_)) -> Response(_) {
 
 // gleeunit test functions end in `_test`
 pub fn new_test() {
-  let p = plunk.new(key: "abc123", executor: fake_client)
+  let p = plunk.new(key: "abc123", sender: fake_client)
 
   p.api_key
   |> should.equal("abc123")
