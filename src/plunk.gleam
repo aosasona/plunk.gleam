@@ -1,5 +1,5 @@
-import gleam/io
+import plunk/client.{Client, SendFn}
 
-pub fn main() {
-  io.println("Hello from plunk!")
+pub fn new(key api_key: String, executor executor: SendFn(a, b)) -> Client(a, b) {
+  Client(api_key: api_key, executor: executor)
 }

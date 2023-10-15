@@ -7,10 +7,17 @@ version = "0.1.0"
 description = "Unofficial library for interacting with Plunk (https://useplunk.com) in Gleam - supports both the BEAM and Javascript targets"
 licences = ["MIT"]
 repository = { type = "github", user = "aosasons", repo = "plunk.gleam" }
+gleam = ">= 0.31.0"
 # links = [{ title = "Website", href = "https://gleam.run" }]
+
+internal_modules = [
+  "plunk/internal/*",
+]
 
 [dependencies]
 gleam_stdlib = "~> 0.31"
+gleam_http = "~> 3.5"
+gleam_json = "~> 0.6"
 
 [dev-dependencies]
 gleeunit = "~> 0.10"

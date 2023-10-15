@@ -3,20 +3,19 @@
 [![Package Version](https://img.shields.io/hexpm/v/plunk)](https://hex.pm/packages/plunk)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/plunk/)
 
-## Quick start
-
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
-```
-
 ## Installation
 
-If available on Hex this package can be added to your Gleam project:
+This library has been designed to be independent of whatever HTTP request library or runtime you choose or wish to use, and you can install for all targets by running:
 
 ```sh
 gleam add plunk
 ```
 
-and its documentation can be found at <https://hexdocs.pm/plunk>.
+## Usage
+
+```rust
+import plunk
+
+pub fn main() {
+}
+```
