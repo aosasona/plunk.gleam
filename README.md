@@ -26,6 +26,5 @@ pub fn main() {
     // Track an event in your application
     let assert Ok(_) = p
         |> track(event: "my_event", email: "someone@example.com", data: [])
-        |> send
 }
 ```
