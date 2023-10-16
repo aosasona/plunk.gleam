@@ -1,3 +1,3 @@
 pub type PlunkError {
-  PlunkError(message: String, code: String)
+  PlunkError(code: Int, error: String, message: String, time: Int)
 }
