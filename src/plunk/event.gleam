@@ -1,16 +1,40 @@
+import gleam/dynamic
 import gleam/json.{Json}
 import gleam/http.{Post}
 import gleam/http/request.{Request}
+import plunk/client.{Client}
+import plunk/internal/bridge.{make_request, send}
+import plunk/types.{PlunkError}
 
 pub type Event {
   Event(event: String, email: String, data: List(#(String, Json)))
 }
 
+pub type EventResponse {
+  EventResponse(
+    success: Bool,
+    contact: String,
+    event: String,
+    timestamp: String,
+  )
+}
+
+fn event_response_decoder() -> dynamic.Decoder(EventResponse) {
+  dynamic.decode4(
+    EventResponse,
+    dynamic.field("success", dynamic.bool),
+    dynamic.field("contact", dynamic.string),
+    dynamic.field("event", dynamic.string),
+    dynamic.field("timestamp", dynamic.string),
+  )
+}
+
 pub fn track(
-  event: String,
-  email: String,
-  data: List(#(String, Json)),
-) -> Request(String) {
+  instance: Client,
+  event event: String,
+  email email: String,
+  data data: List(#(String, Json)),
+) -> Result(EventResponse, PlunkError) {
   let body =
     json.object([
       #("event", json.string(event)),
@@ -19,6 +43,6 @@ pub fn track(
     ])
     |> json.to_string
 
-  request.new()
-  |> request.set_method(Post)
+  make_request(method: Post, endpoint: "/track", body: body)
+  |> send(instance, event_response_decoder)
 }
