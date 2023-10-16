@@ -34,7 +34,7 @@ pub fn track(
   event event: String,
   email email: String,
   data data: List(#(String, Json)),
-) -> Result(EventResponse, PlunkError) {
+) -> Request(String) {
   let body =
     json.object([
       #("event", json.string(event)),
@@ -43,6 +43,14 @@ pub fn track(
     ])
     |> json.to_string
 
-  make_request(method: Post, endpoint: "/track", body: body)
-  |> send(instance, event_response_decoder)
+  instance
+  |> make_request(method: Post, endpoint: "/track", body: body)
+}
+
+pub fn send(
+  instance: Client,
+  req: Request(String),
+) -> Result(EventResponse, PlunkError) {
+  req
+  |> bridge.send(instance, event_response_decoder)
 }
