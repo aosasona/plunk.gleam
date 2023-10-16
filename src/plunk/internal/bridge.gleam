@@ -10,6 +10,7 @@ import plunk/client.{Client}
 const plunk_url = "https://api.useplunk.com/v1"
 
 pub fn make_request(
+  instance: Client,
   endpoint path: String,
   method method: http.Method,
   body body: String,
@@ -25,8 +26,9 @@ pub fn make_request(
       _ -> request.set_body(request, body)
     }
   }
-  |> request.set_header("content-type", "application/json")
-  |> request.set_header("accept", "application/json")
+  |> request.set_header("Content-Type", "application/json")
+  |> request.set_header("Accept", "application/json")
+  |> request.set_header("Authorization", "Bearer" <> instance.api_key)
 }
 
 pub fn normalize_path(path: String) -> String {
