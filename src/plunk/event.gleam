@@ -3,7 +3,7 @@ import gleam/json.{Json}
 import gleam/http.{Post}
 import gleam/http/request.{Request}
 import plunk/client.{Client}
-import plunk/internal/bridge.{make_request, send}
+import plunk/internal/bridge.{make_request}
 import plunk/types.{PlunkError}
 
 pub type Event {
