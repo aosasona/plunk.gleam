@@ -1,5 +1,5 @@
-import plunk/client.{Client, SendFn}
+import plunk/instance.{Instance, SendFn}
 
-pub fn new(key api_key: String, sender executor: SendFn) -> Client {
-  Client(api_key: api_key, executor: executor)
+pub fn new(key api_key: String, sender executor: SendFn) -> Instance {
+  Instance(api_key: api_key, executor: executor)
 }

@@ -5,12 +5,12 @@ import gleam/http/response.{Response}
 import gleam/string
 import gleam/json
 import plunk/types.{ApiError, JSONError, PlunkError}
-import plunk/client.{Client}
+import plunk/instance.{Instance}
 
 const plunk_url = "https://api.useplunk.com/v1"
 
 pub fn make_request(
-  instance: Client,
+  instance: Instance,
   endpoint path: String,
   method method: http.Method,
   body body: String,
@@ -58,12 +58,12 @@ fn error_decoder() -> dynamic.Decoder(PlunkError) {
 
 pub fn send(
   request: Request(String),
-  instance: Client,
+  instance: Instance,
   decoder: fn() -> dynamic.Decoder(t),
 ) -> Result(t, PlunkError) {
   let Response(status: status, body: body, ..) =
     instance
-    |> client.send(request)
+    |> instance.send(request)
 
   case status {
     status if status >= 200 && status < 300 -> {

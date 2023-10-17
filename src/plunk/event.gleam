@@ -2,14 +2,16 @@ import gleam/dynamic
 import gleam/json.{Json}
 import gleam/http.{Post}
 import gleam/http/request.{Request}
-import plunk/client.{Client}
+import plunk/instance.{Instance}
 import plunk/internal/bridge.{make_request}
 import plunk/types.{PlunkError}
 
+/// Event is a type that represents a Plunk event.
 pub type Event {
   Event(event: String, email: String, data: List(#(String, Json)))
 }
 
+/// EventResponse is a type that represents a Plunk event response (track event)
 pub type EventResponse {
   EventResponse(
     success: Bool,
@@ -29,8 +31,26 @@ fn event_response_decoder() -> dynamic.Decoder(EventResponse) {
   )
 }
 
+/// Track events in your application and send them to Plunk. This function returns a Gleam `Request` type that can then be used with any client of your choice.
+///
+/// # Example
+///
+/// In this example we use the `hackney` HTTP client to send the request we get from `track`:
+///
+/// ```gleam
+/// import gleam/hackney
+/// import plunk
+/// import plunk/event
+///
+/// let instance = plunk.new(key: "YOUR_API_KEY", sender: hackney.send)
+/// let assert Ok(_) =
+///   instance
+///   |> event.track(event: "your-event", email: "someone@example.com", data: [#("name", "John")])
+///   |> event.send(instance)
+/// ```
+///
 pub fn track(
-  instance: Client,
+  instance: Instance,
   event event: String,
   email email: String,
   data data: List(#(String, Json)),
@@ -47,9 +67,10 @@ pub fn track(
   |> make_request(method: Post, endpoint: "/track", body: body)
 }
 
+/// Send a request to Plunk to track an event.
 pub fn send(
-  instance: Client,
   req: Request(String),
+  instance: Instance,
 ) -> Result(EventResponse, PlunkError) {
   req
   |> bridge.send(instance, event_response_decoder)

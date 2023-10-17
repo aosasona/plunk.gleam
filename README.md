@@ -15,16 +15,18 @@ gleam add plunk
 
 ```rust
 import gleam/erlang/os
-import plunk.{send}
-import plunk/event.{track}
+import plunk
+import plunk/event.{track, send}
 import your_preferred_http_client as c
 
 pub fn main() {
     let assert Ok(api_key) = os.get_env("PLUNK_API_KEY")
-    let p = plunk.new(key: api_key, sender: c.send)
+    let instance = plunk.new(key: api_key, sender: c.send)
 
     // Track an event in your application
-    let assert Ok(_) = p
+    let assert Ok(_) =
+        instance
         |> track(event: "my_event", email: "someone@example.com", data: [])
+        |> send(instance)
 }
 ```
