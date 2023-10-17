@@ -38,14 +38,17 @@ fn event_response_decoder() -> dynamic.Decoder(EventResponse) {
 /// In this example we use the `hackney` HTTP client to send the request we get from `track`:
 ///
 /// ```gleam
+/// import gleam/json
 /// import gleam/hackney
 /// import plunk
 /// import plunk/event
 ///
 /// let instance = plunk.new(key: "YOUR_API_KEY", sender: hackney.send)
+///
+/// // In a real project, you want to pattern match on the result of `track` to handle errors instead of using `assert Ok(..)`.
 /// let assert Ok(_) =
 ///   instance
-///   |> event.track(event: "your-event", email: "someone@example.com", data: [#("name", "John")])
+///   |> event.track(event: "your-event", email: "someone@example.com", data: [#("name", json.string("John"))])
 ///   |> event.send(instance)
 /// ```
 ///

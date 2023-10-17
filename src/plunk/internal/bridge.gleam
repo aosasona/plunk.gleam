@@ -7,7 +7,7 @@ import gleam/json
 import plunk/types.{ApiError, JSONError, PlunkError}
 import plunk/instance.{Instance}
 
-const plunk_url = "https://api.useplunk.com/v1"
+const plunk_url = "https://api.useplunk.com"
 
 pub fn make_request(
   instance: Instance,
@@ -18,7 +18,7 @@ pub fn make_request(
   request.new()
   |> request.set_method(method)
   |> request.set_host(plunk_url)
-  |> request.set_path(normalize_path(path))
+  |> request.set_path("/v1" <> normalize_path(path))
   |> fn(request) -> Request(String) {
     // we only want to set the body if it's not a GET request
     case method {
@@ -26,9 +26,18 @@ pub fn make_request(
       _ -> request.set_body(request, body)
     }
   }
-  |> request.set_header("Content-Type", "application/json")
-  |> request.set_header("Accept", "application/json")
-  |> request.set_header("Authorization", "Bearer" <> instance.api_key)
+  |> set_header("Content-Type", "application/json")
+  |> set_header("Accept", "application/json")
+  |> set_header("Authorization", "Bearer " <> instance.api_key)
+}
+
+// The default `request.set_header` method makes every key lowercase by default but we best assume that Plunk's servers are case sensitive (especially with `Authorization`)
+fn set_header(
+  req: Request(String),
+  key: String,
+  value: String,
+) -> Request(String) {
+  Request(..req, headers: [#(key, value), ..req.headers])
 }
 
 pub fn normalize_path(path: String) -> String {
