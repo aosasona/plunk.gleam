@@ -4,7 +4,6 @@ import gleam/http.{Post}
 import gleam/http/request.{Request}
 import plunk/instance.{Instance}
 import plunk/internal/bridge.{make_request}
-import plunk/types.{PlunkError}
 
 /// Event is a type that represents a Plunk event.
 pub type Event {
@@ -12,8 +11,8 @@ pub type Event {
 }
 
 /// EventResponse is a type that represents a Plunk event response (track event)
-pub type EventResponse {
-  EventResponse(
+pub type TrackEventResponse {
+  TrackEventResponse(
     success: Bool,
     contact: String,
     event: String,
@@ -21,9 +20,9 @@ pub type EventResponse {
   )
 }
 
-fn event_response_decoder() -> dynamic.Decoder(EventResponse) {
+pub fn track_event_response_decoder() -> dynamic.Decoder(TrackEventResponse) {
   dynamic.decode4(
-    EventResponse,
+    TrackEventResponse,
     dynamic.field("success", dynamic.bool),
     dynamic.field("contact", dynamic.string),
     dynamic.field("event", dynamic.string),
@@ -45,11 +44,14 @@ fn event_response_decoder() -> dynamic.Decoder(EventResponse) {
 ///
 /// let instance = plunk.new(key: "YOUR_API_KEY", sender: hackney.send)
 ///
-/// // In a real project, you want to pattern match on the result of `track` to handle errors instead of using `assert Ok(..)`.
-/// let assert Ok(_) =
+/// let req =
 ///   instance
 ///   |> event.track(event: "your-event", email: "someone@example.com", data: [#("name", json.string("John"))])
-///   |> event.send(instance)
+///
+/// // In a real project, you want to pattern match on the result of `track` to handle errors instead of using `assert Ok(..)`.
+/// let assert Ok(resp) = hackney.send(req)
+/// let assert Ok(data) = plunk.decode(resp, event.event_response_decoder)
+/// // do whatever you want with the data
 /// ```
 ///
 pub fn track(
@@ -68,13 +70,4 @@ pub fn track(
 
   instance
   |> make_request(method: Post, endpoint: "/track", body: body)
-}
-
-/// Send a request to Plunk to track an event.
-pub fn send(
-  req: Request(String),
-  instance: Instance,
-) -> Result(EventResponse, PlunkError) {
-  req
-  |> bridge.send(instance, event_response_decoder)
 }
