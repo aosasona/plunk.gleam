@@ -42,7 +42,7 @@ pub fn track_event_response_decoder() -> dynamic.Decoder(TrackEventResponse) {
 /// import plunk
 /// import plunk/event
 ///
-/// let instance = plunk.new(key: "YOUR_API_KEY", sender: hackney.send)
+/// let instance = plunk.new(key: "YOUR_API_KEY")
 ///
 /// let req =
 ///   instance

@@ -10,23 +10,3 @@ This library has been designed to be independent of whatever HTTP request librar
 ```sh
 gleam add plunk
 ```
-
-## Usage
-
-```rust
-import gleam/erlang/os
-import plunk
-import plunk/event.{track, send}
-import your_preferred_http_client as c
-
-pub fn main() {
-    let assert Ok(api_key) = os.get_env("PLUNK_API_KEY")
-    let instance = plunk.new(key: api_key, sender: c.send)
-
-    // Track an event in your application
-    let assert Ok(_) =
-        instance
-        |> track(event: "my_event", email: "someone@example.com", data: [])
-        |> send(instance)
-}
-```

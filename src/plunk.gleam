@@ -9,6 +9,7 @@ pub fn new(key api_key: String) -> Instance {
   Instance(api_key: api_key)
 }
 
+/// Convert the Gleam `Response` type returned by the HTTP client into the appropriate type for that action/resource
 pub fn decode(
   res: Response(String),
   decoder: fn() -> Decoder(a),
