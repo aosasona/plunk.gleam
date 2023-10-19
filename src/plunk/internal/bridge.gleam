@@ -1,8 +1,10 @@
-import gleam/dynamic
+import gleam/dynamic.{Decoder}
+import gleam/json
 import gleam/http
 import gleam/http/request.{Request}
+import gleam/http/response.{Response}
 import gleam/string
-import plunk/types.{ApiError, PlunkError}
+import plunk/types.{ApiError, JSONError, PlunkError}
 import plunk/instance.{Instance}
 
 const plunk_url = "api.useplunk.com"
@@ -61,4 +63,26 @@ pub fn error_decoder() -> dynamic.Decoder(PlunkError) {
     dynamic.field("message", of: dynamic.string),
     dynamic.field("time", of: dynamic.int),
   )
+}
+
+/// Convert the Gleam `Response` type returned by the HTTP client into the appropriate type for that action/resource
+pub fn decode(
+  res: Response(String),
+  decoder: fn() -> Decoder(a),
+) -> Result(a, PlunkError) {
+  let Response(status: status, body: body, ..) = res
+  case status {
+    status if status >= 200 && status < 300 -> {
+      case json.decode(from: body, using: decoder()) {
+        Ok(decoded) -> Ok(decoded)
+        Error(err) -> Error(JSONError(err))
+      }
+    }
+    _ -> {
+      case json.decode(from: body, using: error_decoder()) {
+        Ok(decoded) -> Error(decoded)
+        Error(err) -> Error(JSONError(err))
+      }
+    }
+  }
 }
