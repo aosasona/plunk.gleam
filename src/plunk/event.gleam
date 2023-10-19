@@ -2,7 +2,9 @@ import gleam/dynamic
 import gleam/json.{Json}
 import gleam/http.{Post}
 import gleam/http/request.{Request}
+import gleam/http/response.{Response}
 import plunk/instance.{Instance}
+import plunk/types.{PlunkError}
 import plunk/internal/bridge.{make_request}
 
 /// Event is a type that represents a Plunk event.
@@ -42,32 +44,36 @@ pub fn track_event_response_decoder() -> dynamic.Decoder(TrackEventResponse) {
 /// import plunk
 /// import plunk/event
 ///
-/// let instance = plunk.new(key: "YOUR_API_KEY")
-///
+/// let instance = plunk.new(key: "YOUR_API_KEY") /
 /// let req =
 ///   instance
-///   |> event.track(event: "your-event", email: "someone@example.com", data: [#("name", json.string("John"))])
+///   |> event.track(Event(
+///      event: "your-event",
+///      email: "someone@example.com",
+///      data: [#("name", json.string("John"))],
+///    ))
 ///
 /// // In a real project, you want to pattern match on the result of `track` to handle errors instead of using `assert Ok(..)`.
 /// let assert Ok(resp) = hackney.send(req)
-/// let assert Ok(data) = plunk.decode(resp, event.event_response_decoder)
+/// let assert Ok(data) = event.decode(resp)
 /// // do whatever you want with the data
 /// ```
 ///
-pub fn track(
-  instance: Instance,
-  event event: String,
-  email email: String,
-  data data: List(#(String, Json)),
-) -> Request(String) {
+pub fn track(instance: Instance, event event: Event) -> Request(String) {
   let body =
     json.object([
-      #("event", json.string(event)),
-      #("email", json.string(email)),
-      #("data", json.object(data)),
+      #("event", json.string(event.event)),
+      #("email", json.string(event.email)),
+      #("data", json.object(event.data)),
     ])
     |> json.to_string
 
   instance
   |> make_request(method: Post, endpoint: "/track", body: body)
+}
+
+/// Decode the raw response into a `TrackEventResponse` type wrapped in a `Result` type that can be pattern matched on.
+pub fn decode(res: Response(String)) -> Result(TrackEventResponse, PlunkError) {
+  res
+  |> bridge.decode(track_event_response_decoder)
 }
