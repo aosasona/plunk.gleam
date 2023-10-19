@@ -10,3 +10,15 @@ This library has been designed to be independent of whatever HTTP request librar
 ```sh
 gleam add plunk
 ```
+
+## Usage
+
+See [documentation](https://hexdocs.pm/plunk/) for each module on Hexdocs or go through tests folder for examples.
+
+## Development
+
+To run tests locally, you need to add your Plunk API key to the environment variables like this:
+
+```sh
+export PLUNK_API_KEUY="sk_..."
+```
