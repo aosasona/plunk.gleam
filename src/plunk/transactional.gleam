@@ -1,5 +1,5 @@
 import gleam/json
-import gleam/dynamic.{Decoder, bool, field, list, string}
+import gleam/dynamic.{Decoder}
 import gleam/option.{Option}
 import gleam/http.{Post}
 import gleam/http/request.{Request}
@@ -40,14 +40,18 @@ pub type SendTransactionalEmailResponse {
 }
 
 fn contact_decoder() -> Decoder(Contact) {
-  dynamic.decode2(Contact, field("id", string), field("email", string))
+  dynamic.decode2(
+    Contact,
+    dynamic.field("id", dynamic.string),
+    dynamic.field("email", dynamic.string),
+  )
 }
 
 fn email_decoder() -> Decoder(Email) {
   dynamic.decode2(
     Email,
-    field("contact", contact_decoder()),
-    field("email", string),
+    dynamic.field("contact", contact_decoder()),
+    dynamic.field("email", dynamic.string),
   )
 }
 
@@ -56,9 +60,9 @@ pub fn send_transactional_email_decoder() -> Decoder(
 ) {
   dynamic.decode3(
     SendTransactionalEmailResponse,
-    field("success", bool),
-    field("emails", list(of: email_decoder())),
-    field("timestamp", string),
+    dynamic.field("success", dynamic.bool),
+    dynamic.field("emails", dynamic.list(of: email_decoder())),
+    dynamic.field("timestamp", dynamic.string),
   )
 }
 
