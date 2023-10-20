@@ -17,7 +17,7 @@ pub fn send_test() {
     |> transactional.send(mail: TransactionalEmail(
       to: Address("someone@example.com"),
       subject: "Hello",
-      body: "<h1>Hello, World!</h1>",
+      body: "Hello, World!",
       name: None,
       from: None,
     ))

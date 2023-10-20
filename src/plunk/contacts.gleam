@@ -48,14 +48,16 @@ pub fn list(instance: Instance) -> Request(String) {
 /// import gleam/io
 /// import gleam/hackney
 /// import plunk
-/// import plunk/contacts.{GetContact}
+/// import plunk/contacts.{GetContact, GetContactResult}
 ///
-/// let instance = plunk.new("API_KEY")
-/// let req = contacts.get(instance, "some-uuid-for-your-contact")
-/// let assert Ok(resp) = hackney.send(req)
-/// let assert Ok(data) = contacts.decode(resp, for: GetContact)
-/// let assert GetContactResult(contact) = data
-/// io.println(contact.id)
+/// fn main() {
+///   let instance = plunk.new("API_KEY")
+///   let req = contacts.get(instance, "some-uuid-for-your-contact")
+///   let assert Ok(resp) = hackney.send(req)
+///   let assert Ok(data) = contacts.decode(resp, for: GetContact)
+///   let assert GetContactResult(contact) = data
+///   io.println(contact.id)
+/// }
 /// ```
 ///
 pub fn decode(

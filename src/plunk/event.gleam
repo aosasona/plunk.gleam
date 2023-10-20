@@ -45,19 +45,21 @@ pub fn track_event_response_decoder() -> dynamic.Decoder(TrackEventResponse) {
 /// import plunk
 /// import plunk/event
 ///
-/// let instance = plunk.new(key: "YOUR_API_KEY") /
-/// let req =
-///   instance
-///   |> event.track(Event(
-///      event: "your-event",
-///      email: "someone@example.com",
-///      data: [#("name", json.string("John"))],
-///    ))
+/// fn main() {
+///   let instance = plunk.new(key: "YOUR_API_KEY") /
+///   let req =
+///     instance
+///     |> event.track(Event(
+///       event: "your-event",
+///       email: "someone@example.com",
+///        data: [#("name", json.string("John"))],
+///      ))
 ///
-/// // In a real project, you want to pattern match on the result of `track` to handle errors instead of using `assert Ok(..)`.
-/// let assert Ok(resp) = hackney.send(req)
-/// let assert Ok(data) = event.decode(resp)
-/// // do whatever you want with the data
+///   // In a real project, you want to pattern match on the result of `track` to handle errors instead of using `assert Ok(..)`.
+///   let assert Ok(resp) = hackney.send(req)
+///   let assert Ok(data) = event.decode(resp)
+///   // do whatever you want with the data
+/// }
 /// ```
 ///
 pub fn track(instance: Instance, event event: Event) -> Request(String) {

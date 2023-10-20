@@ -1,6 +1,6 @@
 import gleam/json
 import gleam/dynamic.{Decoder}
-import gleam/option.{Option}
+import gleam/option.{None, Option, Some}
 import gleam/http.{Post}
 import gleam/http/request.{Request}
 import gleam/http/response.{Response}
@@ -77,29 +77,31 @@ pub fn send_transactional_email_decoder() -> Decoder(
 /// import plunk
 /// import plunk/transactional.{Single, TransactionalEmail}
 ///
-/// let instance = plunk.new(key: "YOUR_API_KEY")
+/// fn main() {
+///   let instance = plunk.new(key: "YOUR_API_KEY")
 ///
-/// let req =
-///   instance
-///   |> transactional.send(
-///     mail: TransactionalEmail(
-///       to: Address("someone@example.com"),
-///       subject: "Hello",
-///       body: "<h1>Hello, World!</h1>",
-///       name: None,
-///       from: None,
+///   let req =
+///     instance
+///     |> transactional.send(
+///       mail: TransactionalEmail(
+///         to: Address("someone@example.com"),
+///         subject: "Hello",
+///         body: "<h1>Hello, World!</h1>",
+///         name: None,
+///         from: None,
+///       )
 ///     )
-///   )
-/// let assert Ok(resp) = hackney.send(req)
-/// let assert Ok(data) = transactional.decode(resp)
-/// // do whatever you want with the data
+///   let assert Ok(resp) = hackney.send(req)
+///   let assert Ok(data) = transactional.decode(resp)
+///   // do whatever you want with the data
+/// }
 /// ```
 pub fn send(
   instance: Instance,
   mail mail: TransactionalEmail,
 ) -> Request(String) {
   let body =
-    json.object([
+    [
       #(
         "to",
         case mail.to {
@@ -109,13 +111,25 @@ pub fn send(
       ),
       #("subject", json.string(mail.subject)),
       #("body", json.string(mail.body)),
-      #("name", json.nullable(mail.name, json.string)),
-      #("from", json.nullable(mail.from, json.string)),
-    ])
+    ]
+    |> omit_if_none("name", mail.name)
+    |> omit_if_none("from", mail.from)
+    |> json.object
     |> json.to_string
 
   instance
   |> make_request(method: Post, endpoint: "/send", body: body)
+}
+
+fn omit_if_none(
+  fields: List(#(String, json.Json)),
+  key: String,
+  optional_value: Option(String),
+) -> List(#(String, json.Json)) {
+  case optional_value {
+    Some(value) -> [#(key, json.string(value)), ..fields]
+    None -> fields
+  }
 }
 
 /// Decode the raw response into a `SendTransactionalEmailResponse` type wrapped in a `Result` type that can be pattern matched on.
