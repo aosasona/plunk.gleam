@@ -1,10 +1,10 @@
 import gleeunit/should
 import gleam/erlang/os
 import gleam/io
-import gleam/option.{None}
+import gleam/option.{None, Some}
 import gleam/result
 import gleam/hackney
-import plunk/instance.{Instance}
+import plunk
 import plunk/transactional.{Address, TransactionalEmail}
 
 pub fn send_test() {
@@ -12,13 +12,15 @@ pub fn send_test() {
     os.get_env("PLUNK_API_KEY")
     |> result.unwrap("")
 
+  should.not_equal(key, "")
+
   let req =
-    Instance(api_key: key)
+    plunk.new(key)
     |> transactional.send(mail: TransactionalEmail(
       to: Address("someone@example.com"),
       subject: "Hello",
       body: "Hello, World!",
-      name: None,
+      name: Some("plunk.gleam"),
       from: None,
     ))
 
@@ -26,7 +28,6 @@ pub fn send_test() {
     Ok(resp) -> {
       let d = transactional.decode(resp)
       should.be_ok(d)
-
       let assert Ok(data) = d
       should.equal(data.success, True)
       io.debug(data)

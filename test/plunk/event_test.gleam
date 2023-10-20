@@ -4,7 +4,7 @@ import gleam/io
 import gleam/json
 import gleam/result
 import gleam/hackney
-import plunk/instance.{Instance}
+import plunk
 import plunk/event.{Event}
 
 pub fn track_test() {
@@ -12,8 +12,10 @@ pub fn track_test() {
     os.get_env("PLUNK_API_KEY")
     |> result.unwrap("")
 
+  should.not_equal(key, "")
+
   let req =
-    Instance(api_key: key)
+    plunk.new(key)
     |> event.track(Event(
       event: "your-event",
       email: "someone@example.com",
