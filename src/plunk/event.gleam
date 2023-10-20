@@ -1,6 +1,7 @@
 import gleam/dynamic
 import gleam/json.{Json}
 import gleam/http.{Post}
+import gleam/option.{Option}
 import gleam/http/request.{Request}
 import gleam/http/response.{Response}
 import plunk/instance.{Instance}
@@ -18,7 +19,7 @@ pub type TrackEventResponse {
     success: Bool,
     contact: String,
     event: String,
-    timestamp: String,
+    timestamp: Option(String),
   )
 }
 
@@ -28,7 +29,7 @@ pub fn track_event_response_decoder() -> dynamic.Decoder(TrackEventResponse) {
     dynamic.field("success", dynamic.bool),
     dynamic.field("contact", dynamic.string),
     dynamic.field("event", dynamic.string),
-    dynamic.field("timestamp", dynamic.string),
+    dynamic.optional_field("timestamp", dynamic.string),
   )
 }
 

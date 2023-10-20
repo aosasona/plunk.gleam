@@ -35,7 +35,7 @@ pub type SendTransactionalEmailResponse {
   SendTransactionalEmailResponse(
     success: Bool,
     emails: List(Email),
-    timestamp: String,
+    timestamp: Option(String),
   )
 }
 
@@ -62,7 +62,7 @@ pub fn send_transactional_email_decoder() -> Decoder(
     SendTransactionalEmailResponse,
     dynamic.field("success", dynamic.bool),
     dynamic.field("emails", dynamic.list(of: email_decoder())),
-    dynamic.field("timestamp", dynamic.string),
+    dynamic.optional_field("timestamp", dynamic.string),
   )
 }
 
