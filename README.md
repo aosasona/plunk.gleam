@@ -20,5 +20,5 @@ See [documentation](https://hexdocs.pm/plunk/) for each module on Hexdocs or go 
 To run tests locally, you need to add your Plunk API key to the environment variables like this:
 
 ```sh
-export PLUNK_API_KEUY="sk_..."
+export PLUNK_API_KEY="sk_..."
 ```
