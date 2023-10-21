@@ -1,4 +1,4 @@
-import gleam/http.{Get, Post}
+import gleam/http.{Delete, Get, Post}
 import gleam/dynamic
 import gleam/json
 import gleam/list
@@ -36,12 +36,20 @@ pub type Count =
 pub type CreatedContact =
   definitions.CreatedContact
 
+pub type Subscription =
+  definitions.Subscription
+
+pub type DeletedContact =
+  definitions.DeletedContact
+
 // Decoder types
 pub type ActionResult {
   GetContactResult(ExtendedContact)
   ListContactsResult(List(Contact))
   CountContactsResult(Count)
   CreateContactResult(CreatedContact)
+  SubscriptionResult(Subscription)
+  DeleteContactResult(DeletedContact)
 }
 
 pub type For {
@@ -49,6 +57,9 @@ pub type For {
   ListContacts
   CountContacts
   CreateContact
+  Subscribe
+  Unsubscribe
+  DeleteContact
 }
 
 pub type CreateContactData {
@@ -57,6 +68,10 @@ pub type CreateContactData {
     subscribed: Bool,
     data: Option(List(#(String, String))),
   )
+}
+
+pub type SubscriptionData {
+  Subscription(id: String)
 }
 
 /// Get a contact by ID
@@ -106,6 +121,39 @@ pub fn create(instance: Instance, contact: CreateContactData) -> Request(String)
   make_request(instance, method: Post, endpoint: "/contacts", body: body)
 }
 
+/// Subscribe a contact
+pub fn subscribe(instance: Instance, id: String) -> Request(String) {
+  make_request(
+    instance,
+    method: Post,
+    endpoint: "/contacts/subscribe",
+    body: json.object([#("id", json.string(id))])
+    |> json.to_string,
+  )
+}
+
+/// Unsubscribe a contact
+pub fn unsubscribe(instance: Instance, id: String) -> Request(String) {
+  make_request(
+    instance,
+    method: Post,
+    endpoint: "/contacts/unsubscribe",
+    body: json.object([#("id", json.string(id))])
+    |> json.to_string,
+  )
+}
+
+/// Delete a contact
+pub fn delete(instance: Instance, id: String) -> Request(String) {
+  make_request(
+    instance,
+    method: Delete,
+    endpoint: "/contacts",
+    body: json.object([#("id", json.string(id))])
+    |> json.to_string,
+  )
+}
+
 ///
 /// This function decodes all the responses related to this resource albeit a bit differently from the other `decode` functions (but, still type-safe)
 ///
@@ -140,6 +188,10 @@ pub fn decode(
       try_decode(res, CountContactsResult, definitions.count_decoder)
     CreateContact ->
       try_decode(res, CreateContactResult, definitions.created_contact_decoder)
+    DeleteContact ->
+      try_decode(res, DeleteContactResult, definitions.deleted_contact_decoder)
+    Subscribe | Unsubscribe ->
+      try_decode(res, SubscriptionResult, definitions.subscription_decoder)
   }
 }
 

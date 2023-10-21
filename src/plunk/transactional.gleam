@@ -1,6 +1,6 @@
 import gleam/json
 import gleam/dynamic.{Decoder}
-import gleam/option.{None, Option, Some}
+import gleam/option.{Option}
 import gleam/http.{Post}
 import gleam/http/request.{Request}
 import gleam/http/response.{Response}

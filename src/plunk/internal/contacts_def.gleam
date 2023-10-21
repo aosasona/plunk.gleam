@@ -96,6 +96,23 @@ pub type Count {
   Count(count: Int)
 }
 
+pub type Subscription {
+  Subscription(success: Bool, contact: String, subscribed: Bool)
+}
+
+// Duplicated for proper type support
+pub type DeletedContact {
+  DeletedContact(
+    success: Bool,
+    id: String,
+    email: String,
+    subscribed: Bool,
+    data: Option(dynamic.Dynamic),
+    created_at: String,
+    updated_at: String,
+  )
+}
+
 fn action_decoder() -> dynamic.Decoder(Action) {
   dynamic.decode8(
     Action,
@@ -241,6 +258,28 @@ pub fn created_contact_decoder() -> dynamic.Decoder(CreatedContact) {
     dynamic.field("data", dynamic.optional(dynamic.dynamic)),
     dynamic.field("createdAt", dynamic.string),
     dynamic.field("updatedAt", dynamic.string),
+  )
+}
+
+pub fn deleted_contact_decoder() -> dynamic.Decoder(DeletedContact) {
+  dynamic.decode7(
+    DeletedContact,
+    dynamic.field("success", dynamic.bool),
+    dynamic.field("id", dynamic.string),
+    dynamic.field("email", dynamic.string),
+    dynamic.field("subscribed", dynamic.bool),
+    dynamic.field("data", dynamic.optional(dynamic.dynamic)),
+    dynamic.field("createdAt", dynamic.string),
+    dynamic.field("updatedAt", dynamic.string),
+  )
+}
+
+pub fn subscription_decoder() -> dynamic.Decoder(Subscription) {
+  dynamic.decode3(
+    Subscription,
+    dynamic.field("success", dynamic.bool),
+    dynamic.field("contact", dynamic.string),
+    dynamic.field("subscribed", dynamic.bool),
   )
 }
 
