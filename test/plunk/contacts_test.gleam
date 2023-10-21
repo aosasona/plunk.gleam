@@ -193,7 +193,7 @@ pub fn subscribe_test() {
         ) <> ", final value: " <> bool.to_string(sub.subscribed),
       )
       should.be_true(sub.success)
-      // should.be_true(sub.subscribed) // at the moment, Plunk has a bug that doesn't return the correct value
+      should.be_true(sub.subscribed)
       Nil
     }
     _ -> should.fail()
