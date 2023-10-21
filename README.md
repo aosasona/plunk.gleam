@@ -13,7 +13,35 @@ gleam add plunk
 
 ## Usage
 
-See [documentation](https://hexdocs.pm/plunk/) for each module on Hexdocs or go through tests folder for examples.
+```rust
+import gleam/erlang/os
+import gleam/io
+import gleam/json
+import gleam/result
+import gleam/hackney
+import plunk
+import plunk/event.{Event}
+
+pub fn main() {
+  let key =
+    os.get_env("PLUNK_API_KEY")
+    |> result.unwrap("")
+
+  let assert Ok(resp) =
+    plunk.new(key)
+    |> event.track(Event(
+      event: "your-event",
+      email: "someone@example.com",
+      data: [#("name", json.string("John"))],
+    ))
+    |> hackney.send
+
+  let assert Ok(e) = event.decode(resp)
+  io.debug(e)
+}
+```
+
+See [documentation](https://hexdocs.pm/plunk/) for each module on Hexdocs or go through the [test](./test/) folder for examples.
 
 ## Development
 
@@ -22,3 +50,5 @@ To run tests locally, you need to add your Plunk API key to the environment vari
 ```sh
 export PLUNK_API_KEY="sk_..."
 ```
+
+> NOTE: tests are designed to run only in the BEAM runtime (erlang target) as they depend on hackney
