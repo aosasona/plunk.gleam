@@ -17,7 +17,7 @@ pub fn send_test() {
   let req =
     plunk.new(key)
     |> transactional.send(mail: TransactionalEmail(
-      to: Address("someone@example.com"),
+      to: Address("someone@mailinator.com"),
       subject: "Hello",
       body: "Hello, World!",
       name: Some("plunk.gleam"),

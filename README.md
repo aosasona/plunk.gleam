@@ -13,7 +13,7 @@ gleam add plunk
 
 ## Usage
 
-```rust
+```gleam
 import gleam/erlang/os
 import gleam/io
 import gleam/json
