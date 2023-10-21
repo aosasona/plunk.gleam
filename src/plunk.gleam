@@ -1,11 +1,14 @@
 import gleam/dynamic.{Decoder}
 import gleam/http/response.{Response}
-import plunk/instance.{Instance}
+import plunk/instance
 import plunk/internal/bridge
 import plunk/types.{PlunkError}
 
-pub fn new(key api_key: String) -> Instance {
-  Instance(api_key: api_key)
+pub type Instance =
+  instance.Instance
+
+pub fn new(key api_key: String) -> instance.Instance {
+  instance.Instance(api_key: api_key)
 }
 
 pub fn decode(
