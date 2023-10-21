@@ -7,6 +7,7 @@ import gleam/http/response.{Response}
 import plunk/instance.{Instance}
 import plunk/types.{PlunkError}
 import plunk/internal/bridge.{make_request}
+import plunk/internal/utils
 
 pub type To {
   Address(String)
@@ -112,24 +113,13 @@ pub fn send(
       #("subject", json.string(mail.subject)),
       #("body", json.string(mail.body)),
     ]
-    |> omit_if_none("name", mail.name)
-    |> omit_if_none("from", mail.from)
+    |> utils.omit_if_none("name", mail.name, json.string)
+    |> utils.omit_if_none("from", mail.from, json.string)
     |> json.object
     |> json.to_string
 
   instance
   |> make_request(method: Post, endpoint: "/send", body: body)
-}
-
-fn omit_if_none(
-  fields: List(#(String, json.Json)),
-  key: String,
-  optional_value: Option(String),
-) -> List(#(String, json.Json)) {
-  case optional_value {
-    Some(value) -> [#(key, json.string(value)), ..fields]
-    None -> fields
-  }
 }
 
 /// Decode the raw response into a `SendTransactionalEmailResponse` type wrapped in a `Result` type that can be pattern matched on.
