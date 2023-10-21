@@ -80,6 +80,22 @@ pub type Contact {
   )
 }
 
+pub type CreatedContact {
+  CreatedContact(
+    success: Bool,
+    id: String,
+    email: String,
+    subscribed: Bool,
+    data: Option(dynamic.Dynamic),
+    created_at: String,
+    updated_at: String,
+  )
+}
+
+pub type Count {
+  Count(count: Int)
+}
+
 fn action_decoder() -> dynamic.Decoder(Action) {
   dynamic.decode8(
     Action,
@@ -199,7 +215,7 @@ pub fn get_contact_decoder() -> dynamic.Decoder(ExtendedContact) {
   )
 }
 
-pub fn list_contacts_decoder() -> dynamic.Decoder(_) {
+pub fn list_contacts_decoder() -> dynamic.Decoder(List(Contact)) {
   dynamic.list(dynamic.decode6(
     Contact,
     dynamic.field("id", dynamic.string),
@@ -209,6 +225,23 @@ pub fn list_contacts_decoder() -> dynamic.Decoder(_) {
     dynamic.field("createdAt", dynamic.string),
     dynamic.field("updatedAt", dynamic.string),
   ))
+}
+
+pub fn count_decoder() -> dynamic.Decoder(Count) {
+  dynamic.decode1(Count, dynamic.field("count", dynamic.int))
+}
+
+pub fn created_contact_decoder() -> dynamic.Decoder(CreatedContact) {
+  dynamic.decode7(
+    CreatedContact,
+    dynamic.field("success", dynamic.bool),
+    dynamic.field("id", dynamic.string),
+    dynamic.field("email", dynamic.string),
+    dynamic.field("subscribed", dynamic.bool),
+    dynamic.field("data", dynamic.optional(dynamic.dynamic)),
+    dynamic.field("createdAt", dynamic.string),
+    dynamic.field("updatedAt", dynamic.string),
+  )
 }
 
 fn all_errors(
