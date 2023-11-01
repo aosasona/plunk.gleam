@@ -1,11 +1,11 @@
 import gleam/json
-import gleam/dynamic.{Decoder}
-import gleam/option.{Option}
+import gleam/dynamic.{type Decoder}
+import gleam/option.{type Option}
 import gleam/http.{Post}
-import gleam/http/request.{Request}
-import gleam/http/response.{Response}
-import plunk/instance.{Instance}
-import plunk/types.{PlunkError}
+import gleam/http/request.{type Request}
+import gleam/http/response.{type Response}
+import plunk/instance.{type Instance}
+import plunk/types.{type PlunkError}
 import plunk/internal/bridge.{make_request}
 import plunk/internal/utils
 

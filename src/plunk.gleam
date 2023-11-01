@@ -1,8 +1,8 @@
-import gleam/dynamic.{Decoder}
-import gleam/http/response.{Response}
+import gleam/dynamic.{type Decoder}
+import gleam/http/response.{type Response}
 import plunk/instance
 import plunk/internal/bridge
-import plunk/types.{PlunkError}
+import plunk/types.{type PlunkError}
 
 pub type Instance =
   instance.Instance

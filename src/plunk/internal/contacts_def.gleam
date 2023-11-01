@@ -1,6 +1,6 @@
 import gleam/dynamic
 import gleam/list
-import gleam/option.{Option}
+import gleam/option.{type Option}
 
 pub type Event {
   Event(

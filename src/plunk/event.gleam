@@ -1,11 +1,11 @@
 import gleam/dynamic
-import gleam/json.{Json}
+import gleam/json.{type Json}
 import gleam/http.{Post}
-import gleam/option.{Option}
-import gleam/http/request.{Request}
-import gleam/http/response.{Response}
-import plunk/instance.{Instance}
-import plunk/types.{PlunkError}
+import gleam/option.{type Option}
+import gleam/http/request.{type Request}
+import gleam/http/response.{type Response}
+import plunk/instance.{type Instance}
+import plunk/types.{type PlunkError}
 import plunk/internal/bridge.{make_request}
 
 /// Event is a type that represents a Plunk event.
