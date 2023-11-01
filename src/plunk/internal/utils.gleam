@@ -1,5 +1,5 @@
 import gleam/json
-import gleam/option.{None, Option, Some}
+import gleam/option.{type Option, None, Some}
 
 pub fn omit_if_none(
   fields: List(#(String, json.Json)),

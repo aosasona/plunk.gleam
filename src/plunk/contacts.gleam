@@ -3,11 +3,11 @@ import gleam/dynamic
 import gleam/json
 import gleam/list
 import gleam/result.{try}
-import gleam/option.{None, Option, Some}
-import gleam/http/request.{Request}
-import gleam/http/response.{Response}
-import plunk/instance.{Instance}
-import plunk/types.{PlunkError}
+import gleam/option.{type Option, None, Some}
+import gleam/http/request.{type Request}
+import gleam/http/response.{type Response}
+import plunk/instance.{type Instance}
+import plunk/types.{type PlunkError}
 import plunk/internal/bridge.{make_request}
 import plunk/internal/contacts_def as definitions
 

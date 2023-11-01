@@ -1,11 +1,11 @@
-import gleam/dynamic.{Decoder}
+import gleam/dynamic.{type Decoder}
 import gleam/json
 import gleam/http
-import gleam/http/request.{Request}
-import gleam/http/response.{Response}
+import gleam/http/request.{type Request, Request}
+import gleam/http/response.{type Response, Response}
 import gleam/string
-import plunk/types.{ApiError, JSONError, PlunkError}
-import plunk/instance.{Instance}
+import plunk/types.{type PlunkError, ApiError, JSONError}
+import plunk/instance.{type Instance}
 
 const plunk_url = "api.useplunk.com"
 
