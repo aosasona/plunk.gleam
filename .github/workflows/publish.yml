@@ -1,12 +1,12 @@
-name: test
+name: publish
 on:
-  push:
-    branches:
-      - master
-      - main
-  pull_request:
+  release:
+    types: [published]
 jobs:
-  test:
+  publish:
+    env:
+      HEXPM_USER: ${{ secrets.HEXPM_USER }}
+      HEXPM_PASS: ${{ secrets.HEXPM_PASS }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -15,6 +15,4 @@ jobs:
           otp-version: "26.0.2"
           gleam-version: "0.33.0"
           rebar3-version: "3"
-      - run: gleam format --check src test
-      - run: gleam deps download
-      - run: gleam test
+      - run: gleam publish --yes
