@@ -16,11 +16,11 @@ pub fn track_test() {
 
   let req =
     plunk.new(key)
-    |> event.track(Event(
-      event: "your-event",
-      email: "someone@example.com",
-      data: [#("name", json.string("John"))],
-    ))
+    |> event.track(
+      Event(event: "your-event", email: "someone@example.com", data: [
+        #("name", json.string("John")),
+      ]),
+    )
 
   case hackney.send(req) {
     Ok(resp) -> {

@@ -6,10 +6,20 @@ import gleam/option.{Some}
 import gleam/io
 import gleam/erlang/os
 import gleam/result
-import ids/ulid
 import gleam/hackney
 import plunk
 import plunk/contacts
+
+fn generate() {
+  generate_("", 16)
+}
+
+fn generate_(state: String, len: Int) {
+  case len {
+    0 -> state
+    _ -> generate_(state <> int.to_string(int.random(100)), len - 1)
+  }
+}
 
 pub fn get_test() {
   let key =
@@ -94,7 +104,10 @@ pub fn count_test() {
   case data {
     contacts.CountContactsResult(c) -> {
       io.debug(
-        "Got " <> int.to_string(c.count) <> " contact" <> case c {
+        "Got "
+        <> int.to_string(c.count)
+        <> " contact"
+        <> case c {
           c if c.count > 1 -> "s"
           _ -> ""
         },
@@ -115,7 +128,8 @@ pub fn create_test() {
   let raw_resp =
     plunk.new(key)
     |> contacts.create(contacts.CreateContactData(
-      email: ulid.generate() <> "@example.com",
+      email: generate()
+      <> "@example.com",
       subscribed: True,
       data: Some([#("name", "John")]),
     ))
@@ -148,12 +162,13 @@ fn setup_new_contact(
 
   should.not_equal(key, "")
 
-  let id = ulid.generate()
+  let id = generate()
 
   let raw_resp =
     plunk.new(key)
     |> contacts.create(contacts.CreateContactData(
-      email: id <> "@example.com",
+      email: id
+      <> "@example.com",
       subscribed: subscribed,
       data: Some([#("ulid", id)]),
     ))
@@ -188,9 +203,13 @@ pub fn subscribe_test() {
   case data {
     contacts.SubscriptionResult(sub) -> {
       io.debug(
-        "[" <> contact.email <> " - SUBSCRIBED]" <> " Initial value: " <> bool.to_string(
-          contact.subscribed,
-        ) <> ", final value: " <> bool.to_string(sub.subscribed),
+        "["
+        <> contact.email
+        <> " - SUBSCRIBED]"
+        <> " Initial value: "
+        <> bool.to_string(contact.subscribed)
+        <> ", final value: "
+        <> bool.to_string(sub.subscribed),
       )
       should.be_true(sub.success)
       should.be_true(sub.subscribed)
@@ -219,9 +238,13 @@ pub fn unsubscribe_test() {
   case data {
     contacts.SubscriptionResult(sub) -> {
       io.debug(
-        "[" <> contact.email <> " - UNSUBSCRIBED]" <> " Initial value: " <> bool.to_string(
-          contact.subscribed,
-        ) <> ", final value: " <> bool.to_string(sub.subscribed),
+        "["
+        <> contact.email
+        <> " - UNSUBSCRIBED]"
+        <> " Initial value: "
+        <> bool.to_string(contact.subscribed)
+        <> ", final value: "
+        <> bool.to_string(sub.subscribed),
       )
       should.be_false(sub.subscribed)
       should.be_true(sub.success)
