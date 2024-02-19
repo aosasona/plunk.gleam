@@ -103,13 +103,10 @@ pub fn send(
 ) -> Request(String) {
   let body =
     [
-      #(
-        "to",
-        case mail.to {
-          Address(addr) -> json.string(addr)
-          Addresses(addrs) -> json.array(addrs, of: json.string)
-        },
-      ),
+      #("to", case mail.to {
+        Address(addr) -> json.string(addr)
+        Addresses(addrs) -> json.array(addrs, of: json.string)
+      }),
       #("subject", json.string(mail.subject)),
       #("body", json.string(mail.body)),
     ]

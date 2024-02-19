@@ -79,8 +79,7 @@ pub fn get(instance: Instance, id contact_id: String) -> Request(String) {
   make_request(
     instance,
     method: Get,
-    endpoint: "/contacts/"
-    <> contact_id,
+    endpoint: "/contacts/" <> contact_id,
     body: "",
   )
 }
