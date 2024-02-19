@@ -1,5 +1,5 @@
 name = "plunk"
-version = "1.2.0"
+version = "1.2.1"
 
 # Fill out these fields if you intend to generate HTML documentation or publish
 # your project to the Hex package manager.
@@ -15,11 +15,11 @@ internal_modules = [
 ]
 
 [dependencies]
-gleam_stdlib = "~> 0.34"
+gleam_stdlib = "~> 0.34 or ~> 1.0"
 gleam_http = "~> 3.5"
-gleam_json = "~> 0.7"
+gleam_json = "~> 1.0"
 
 [dev-dependencies]
 gleeunit = "~> 1.0"
 gleam_hackney = "~> 1.2"
-gleam_erlang = "~> 0.23"
+gleam_erlang = "~> 0.24"
