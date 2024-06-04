@@ -76,7 +76,7 @@ pub fn send_transactional_email_decoder() -> Decoder(
 /// import gleam/option.{None}
 /// import gleam/hackney
 /// import plunk
-/// import plunk/transactional.{Single, TransactionalEmail}
+/// import plunk/transactional.{Address, TransactionalEmail}
 ///
 /// fn main() {
 ///   let instance = plunk.new(key: "YOUR_API_KEY")
