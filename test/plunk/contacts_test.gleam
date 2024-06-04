@@ -183,7 +183,7 @@ fn setup_new_contact(
 }
 
 pub fn subscribe_test() {
-  let assert #(key, contact) = setup_new_contact(subscribed: False)
+  let #(key, contact) = setup_new_contact(subscribed: False)
   should.be_false(contact.subscribed)
 
   let raw_resp =
@@ -218,7 +218,7 @@ pub fn subscribe_test() {
 }
 
 pub fn unsubscribe_test() {
-  let assert #(key, contact) = setup_new_contact(subscribed: True)
+  let #(key, contact) = setup_new_contact(subscribed: True)
   should.be_true(contact.subscribed)
 
   let raw_resp =
@@ -253,7 +253,7 @@ pub fn unsubscribe_test() {
 }
 
 pub fn delete_test() {
-  let assert #(key, contact) = setup_new_contact(subscribed: True)
+  let #(key, contact) = setup_new_contact(subscribed: True)
 
   let raw_resp =
     plunk.new(key)
