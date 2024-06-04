@@ -1,6 +1,6 @@
-import plunk
 import gleeunit
 import gleeunit/should
+import plunk
 
 pub fn main() {
   gleeunit.main()

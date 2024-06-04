@@ -1,13 +1,13 @@
-import gleam/json
 import gleam/dynamic.{type Decoder}
-import gleam/option.{type Option}
 import gleam/http.{Post}
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
+import gleam/json
+import gleam/option.{type Option}
 import plunk/instance.{type Instance}
-import plunk/types.{type PlunkError}
 import plunk/internal/bridge.{make_request}
 import plunk/internal/utils
+import plunk/types.{type PlunkError}
 
 pub type To {
   Address(String)

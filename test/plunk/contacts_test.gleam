@@ -1,12 +1,12 @@
-import gleeunit/should
-import gleam/list
-import gleam/int
 import gleam/bool
-import gleam/option.{Some}
-import gleam/io
 import gleam/erlang/os
-import gleam/result
 import gleam/hackney
+import gleam/int
+import gleam/io
+import gleam/list
+import gleam/option.{Some}
+import gleam/result
+import gleeunit/should
 import plunk
 import plunk/contacts
 
@@ -105,12 +105,12 @@ pub fn count_test() {
     contacts.CountContactsResult(c) -> {
       io.debug(
         "Got "
-          <> int.to_string(c.count)
-          <> " contact"
-          <> case c {
-            c if c.count > 1 -> "s"
-            _ -> ""
-          },
+        <> int.to_string(c.count)
+        <> " contact"
+        <> case c {
+          c if c.count > 1 -> "s"
+          _ -> ""
+        },
       )
       Nil
     }
@@ -202,12 +202,12 @@ pub fn subscribe_test() {
     contacts.SubscriptionResult(sub) -> {
       io.debug(
         "["
-          <> contact.email
-          <> " - SUBSCRIBED]"
-          <> " Initial value: "
-          <> bool.to_string(contact.subscribed)
-          <> ", final value: "
-          <> bool.to_string(sub.subscribed),
+        <> contact.email
+        <> " - SUBSCRIBED]"
+        <> " Initial value: "
+        <> bool.to_string(contact.subscribed)
+        <> ", final value: "
+        <> bool.to_string(sub.subscribed),
       )
       should.be_true(sub.success)
       should.be_true(sub.subscribed)
@@ -237,12 +237,12 @@ pub fn unsubscribe_test() {
     contacts.SubscriptionResult(sub) -> {
       io.debug(
         "["
-          <> contact.email
-          <> " - UNSUBSCRIBED]"
-          <> " Initial value: "
-          <> bool.to_string(contact.subscribed)
-          <> ", final value: "
-          <> bool.to_string(sub.subscribed),
+        <> contact.email
+        <> " - UNSUBSCRIBED]"
+        <> " Initial value: "
+        <> bool.to_string(contact.subscribed)
+        <> ", final value: "
+        <> bool.to_string(sub.subscribed),
       )
       should.be_false(sub.subscribed)
       should.be_true(sub.success)

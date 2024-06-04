@@ -1,9 +1,9 @@
-import gleeunit/should
 import gleam/erlang/os
+import gleam/hackney
 import gleam/io
 import gleam/option.{None, Some}
 import gleam/result
-import gleam/hackney
+import gleeunit/should
 import plunk
 import plunk/transactional.{Address, TransactionalEmail}
 
