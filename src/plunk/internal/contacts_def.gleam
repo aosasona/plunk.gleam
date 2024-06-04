@@ -183,9 +183,18 @@ fn email_decoder() -> dynamic.Decoder(Email) {
       created_at_dc,
       updated_at_dc
     {
-      Ok(id), Ok(message_id), Ok(subject), Ok(body), Ok(status), Ok(project_id), Ok(
-        action_id,
-      ), Ok(campaign_id), Ok(contact_id), Ok(created_at), Ok(updated_at) -> {
+      Ok(id),
+        Ok(message_id),
+        Ok(subject),
+        Ok(body),
+        Ok(status),
+        Ok(project_id),
+        Ok(action_id),
+        Ok(campaign_id),
+        Ok(contact_id),
+        Ok(created_at),
+        Ok(updated_at)
+      -> {
         Ok(Email(
           id,
           message_id,

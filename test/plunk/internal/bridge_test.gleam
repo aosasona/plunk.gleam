@@ -1,9 +1,9 @@
-import gleeunit/should
 import gleam/erlang/os
-import gleam/list
-import gleam/json
-import gleam/result
 import gleam/http.{Post}
+import gleam/json
+import gleam/list
+import gleam/result
+import gleeunit/should
 import plunk/instance.{Instance}
 import plunk/internal/bridge
 

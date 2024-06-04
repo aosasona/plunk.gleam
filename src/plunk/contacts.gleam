@@ -1,15 +1,15 @@
-import gleam/http.{Delete, Get, Post}
 import gleam/dynamic
-import gleam/json
-import gleam/list
-import gleam/result.{try}
-import gleam/option.{type Option, None, Some}
+import gleam/http.{Delete, Get, Post}
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
+import gleam/json
+import gleam/list
+import gleam/option.{type Option, None, Some}
+import gleam/result.{try}
 import plunk/instance.{type Instance}
-import plunk/types.{type PlunkError}
 import plunk/internal/bridge.{make_request}
 import plunk/internal/contacts_def as definitions
+import plunk/types.{type PlunkError}
 
 // Re-exported types (for convenience e.g pattern matching or destructuring)
 pub type Event =
@@ -107,8 +107,8 @@ pub fn create(instance: Instance, contact: CreateContactData) -> Request(String)
           #(
             "data",
             d
-            |> list.map(fn(data) { #(data.0, json.string(data.1)) })
-            |> json.object,
+              |> list.map(fn(data) { #(data.0, json.string(data.1)) })
+              |> json.object,
           ),
           ..fields
         ]
@@ -128,7 +128,7 @@ pub fn subscribe(instance: Instance, id: String) -> Request(String) {
     method: Post,
     endpoint: "/contacts/subscribe",
     body: json.object([#("id", json.string(id))])
-    |> json.to_string,
+      |> json.to_string,
   )
 }
 
@@ -139,7 +139,7 @@ pub fn unsubscribe(instance: Instance, id: String) -> Request(String) {
     method: Post,
     endpoint: "/contacts/unsubscribe",
     body: json.object([#("id", json.string(id))])
-    |> json.to_string,
+      |> json.to_string,
   )
 }
 
@@ -150,7 +150,7 @@ pub fn delete(instance: Instance, id: String) -> Request(String) {
     method: Delete,
     endpoint: "/contacts",
     body: json.object([#("id", json.string(id))])
-    |> json.to_string,
+      |> json.to_string,
   )
 }
 

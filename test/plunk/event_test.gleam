@@ -1,9 +1,9 @@
-import gleeunit/should
 import gleam/erlang/os
+import gleam/hackney
 import gleam/io
 import gleam/json
 import gleam/result
-import gleam/hackney
+import gleeunit/should
 import plunk
 import plunk/event.{Event}
 
