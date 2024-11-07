@@ -13,9 +13,9 @@ gleam = ">= 1.0.0"
 internal_modules = ["plunk/internal/*"]
 
 [dependencies]
-gleam_stdlib = ">= 0.34.0 and < 1.0.0"
-gleam_http = ">= 3.5.3 and < 4.0.0"
-gleam_json = "1.0.1"                   # required for the conflicting gleam_json-OTP-27 upgrade
+gleam_stdlib = ">= 0.41.0 and < 1.0.0"
+gleam_http = ">= 3.7.0 and < 4.0.0"
+gleam_json = ">= 2.0.0 and < 3.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.1.2 and < 2.0.0"
