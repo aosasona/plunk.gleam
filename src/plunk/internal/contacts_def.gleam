@@ -211,7 +211,7 @@ fn email_decoder() -> dynamic.Decoder(Email) {
       }
       a, b, c, d, e, f, g, h, i, j, k -> {
         Error(
-          list.concat([
+          list.flatten([
             all_errors(a),
             all_errors(b),
             all_errors(c),
