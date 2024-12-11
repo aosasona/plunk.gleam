@@ -50,7 +50,7 @@ pub fn normalize_path(path: String) -> String {
     True ->
       path
       |> string.trim
-      |> string.drop_right(1)
+      |> string.drop_end(1)
     False -> path
   }
 }

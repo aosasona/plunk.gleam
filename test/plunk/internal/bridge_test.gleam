@@ -1,4 +1,5 @@
-import gleam/erlang/os
+import dot_env
+import dot_env/env
 import gleam/http.{Post}
 import gleam/json
 import gleam/list
@@ -8,6 +9,8 @@ import plunk/instance.{Instance}
 import plunk/internal/bridge
 
 pub fn normalize_path_test() {
+  dot_env.load_default()
+
   "/foo/bar/baz"
   |> bridge.normalize_path
   |> should.equal("/foo/bar/baz")
@@ -26,8 +29,10 @@ pub fn normalize_path_test() {
 }
 
 pub fn make_request_test() {
+  dot_env.load_default()
+
   let key =
-    os.get_env("PLUNK_API_KEY")
+    env.get_string("PLUNK_API_KEY")
     |> result.unwrap("")
 
   let body =
