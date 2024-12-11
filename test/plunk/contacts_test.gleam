@@ -1,5 +1,6 @@
+import dot_env
+import dot_env/env
 import gleam/bool
-import gleam/erlang/os
 import gleam/hackney
 import gleam/int
 import gleam/io
@@ -22,8 +23,10 @@ fn generate_(state: String, len: Int) {
 }
 
 pub fn get_test() {
+  dot_env.load_default()
+
   let key =
-    os.get_env("PLUNK_API_KEY")
+    env.get_string("PLUNK_API_KEY")
     |> result.unwrap("")
 
   should.not_equal(key, "")
@@ -50,8 +53,10 @@ pub fn get_test() {
 }
 
 pub fn list_test() {
+  dot_env.load_default()
+
   let key =
-    os.get_env("PLUNK_API_KEY")
+    env.get_string("PLUNK_API_KEY")
     |> result.unwrap("")
 
   should.not_equal(key, "")
@@ -83,8 +88,10 @@ pub fn list_test() {
 }
 
 pub fn count_test() {
+  dot_env.load_default()
+
   let key =
-    os.get_env("PLUNK_API_KEY")
+    env.get_string("PLUNK_API_KEY")
     |> result.unwrap("")
 
   should.not_equal(key, "")
@@ -119,8 +126,10 @@ pub fn count_test() {
 }
 
 pub fn create_test() {
+  dot_env.load_default()
+
   let key =
-    os.get_env("PLUNK_API_KEY")
+    env.get_string("PLUNK_API_KEY")
     |> result.unwrap("")
 
   should.not_equal(key, "")
@@ -155,8 +164,10 @@ pub fn create_test() {
 fn setup_new_contact(
   subscribed subscribed: Bool,
 ) -> #(String, contacts.CreatedContact) {
+  dot_env.load_default()
+
   let key =
-    os.get_env("PLUNK_API_KEY")
+    env.get_string("PLUNK_API_KEY")
     |> result.unwrap("")
 
   should.not_equal(key, "")
@@ -183,6 +194,8 @@ fn setup_new_contact(
 }
 
 pub fn subscribe_test() {
+  dot_env.load_default()
+
   let #(key, contact) = setup_new_contact(subscribed: False)
   should.be_false(contact.subscribed)
 
@@ -218,6 +231,8 @@ pub fn subscribe_test() {
 }
 
 pub fn unsubscribe_test() {
+  dot_env.load_default()
+
   let #(key, contact) = setup_new_contact(subscribed: True)
   should.be_true(contact.subscribed)
 
@@ -253,6 +268,8 @@ pub fn unsubscribe_test() {
 }
 
 pub fn delete_test() {
+  dot_env.load_default()
+
   let #(key, contact) = setup_new_contact(subscribed: True)
 
   let raw_resp =

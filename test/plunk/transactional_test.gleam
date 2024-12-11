@@ -1,4 +1,5 @@
-import gleam/erlang/os
+import dot_env
+import dot_env/env
 import gleam/hackney
 import gleam/io
 import gleam/option.{None, Some}
@@ -8,8 +9,10 @@ import plunk
 import plunk/transactional.{Address, TransactionalEmail}
 
 pub fn send_test() {
+  dot_env.load_default()
+
   let key =
-    os.get_env("PLUNK_API_KEY")
+    env.get_string("PLUNK_API_KEY")
     |> result.unwrap("")
 
   should.not_equal(key, "")
