@@ -1,7 +1,6 @@
 import dot_env
 import dot_env/env
 import gleam/hackney
-import gleam/io
 import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
@@ -34,11 +33,11 @@ pub fn send_test() {
       should.be_ok(d)
       let assert Ok(data) = d
       should.equal(data.success, True)
-      io.println_error(data |> string.inspect)
+      echo data
       Nil
     }
     Error(e) -> {
-      io.println_error(e |> string.inspect)
+      echo "Error: " <> e |> string.inspect
       should.fail()
     }
   }
