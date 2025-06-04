@@ -1,4 +1,4 @@
-import gleam/dynamic.{type Decoder}
+import gleam/dynamic/decode.{type Decoder}
 import gleam/http/response.{type Response}
 import plunk/instance
 import plunk/internal/bridge

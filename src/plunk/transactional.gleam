@@ -1,4 +1,4 @@
-import gleam/dynamic.{type Decoder}
+import gleam/dynamic/decode.{type Decoder}
 import gleam/http.{Post}
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
@@ -41,30 +41,32 @@ pub type SendTransactionalEmailResponse {
 }
 
 fn contact_decoder() -> Decoder(Contact) {
-  dynamic.decode2(
-    Contact,
-    dynamic.field("id", dynamic.string),
-    dynamic.field("email", dynamic.string),
-  )
+  use id <- decode.field("id", decode.string)
+  use email <- decode.field("email", decode.string)
+  decode.success(Contact(id: id, email: email))
 }
 
 fn email_decoder() -> Decoder(Email) {
-  dynamic.decode2(
-    Email,
-    dynamic.field("contact", contact_decoder()),
-    dynamic.field("email", dynamic.string),
-  )
+  use contact <- decode.field("contact", contact_decoder())
+  use email <- decode.field("email", decode.string)
+  decode.success(Email(contact: contact, email: email))
 }
 
 pub fn send_transactional_email_decoder() -> Decoder(
   SendTransactionalEmailResponse,
 ) {
-  dynamic.decode3(
-    SendTransactionalEmailResponse,
-    dynamic.field("success", dynamic.bool),
-    dynamic.field("emails", dynamic.list(of: email_decoder())),
-    dynamic.optional_field("timestamp", dynamic.string),
+  use success <- decode.field("success", decode.bool)
+  use emails <- decode.field("emails", decode.list(email_decoder()))
+  use timestamp <- decode.optional_field(
+    "timestamp",
+    option.None,
+    decode.optional(decode.string),
   )
+  decode.success(SendTransactionalEmailResponse(
+    success: success,
+    emails: emails,
+    timestamp: timestamp,
+  ))
 }
 
 ///

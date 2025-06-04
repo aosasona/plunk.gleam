@@ -4,6 +4,7 @@ import gleam/hackney
 import gleam/io
 import gleam/option.{None, Some}
 import gleam/result
+import gleam/string
 import gleeunit/should
 import plunk
 import plunk/transactional.{Address, TransactionalEmail}
@@ -33,11 +34,11 @@ pub fn send_test() {
       should.be_ok(d)
       let assert Ok(data) = d
       should.equal(data.success, True)
-      io.debug(data)
+      io.println_error(data |> string.inspect)
       Nil
     }
     Error(e) -> {
-      io.debug(e)
+      io.println_error(e |> string.inspect)
       should.fail()
     }
   }

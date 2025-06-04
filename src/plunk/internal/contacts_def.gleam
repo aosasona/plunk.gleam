@@ -1,5 +1,4 @@
-import gleam/dynamic
-import gleam/list
+import gleam/dynamic/decode
 import gleam/option.{type Option}
 
 pub type Event {
@@ -86,7 +85,7 @@ pub type CreatedContact {
     id: String,
     email: String,
     subscribed: Bool,
-    data: Option(dynamic.Dynamic),
+    data: Option(decode.Dynamic),
     created_at: String,
     updated_at: String,
   )
@@ -107,198 +106,192 @@ pub type DeletedContact {
     id: String,
     email: String,
     subscribed: Bool,
-    data: Option(dynamic.Dynamic),
+    data: Option(decode.Dynamic),
     created_at: String,
     updated_at: String,
   )
 }
 
-fn action_decoder() -> dynamic.Decoder(Action) {
-  dynamic.decode8(
-    Action,
-    dynamic.field("id", dynamic.string),
-    dynamic.field("name", dynamic.string),
-    dynamic.field("runOnce", dynamic.bool),
-    dynamic.field("delay", dynamic.int),
-    dynamic.field("projectId", dynamic.optional(dynamic.string)),
-    dynamic.field("templateId", dynamic.optional(dynamic.string)),
-    dynamic.field("createdAt", dynamic.string),
-    dynamic.field("updatedAt", dynamic.string),
-  )
-}
-
-fn event_decoder() -> dynamic.Decoder(Event) {
-  dynamic.decode7(
-    Event,
-    dynamic.field("id", dynamic.string),
-    dynamic.field("name", dynamic.string),
-    dynamic.field("projectId", dynamic.string),
-    dynamic.field("templateId", dynamic.optional(dynamic.string)),
-    dynamic.field("campaignId", dynamic.optional(dynamic.string)),
-    dynamic.field("createdAt", dynamic.string),
-    dynamic.field("updatedAt", dynamic.string),
-  )
-}
-
-fn trigger_decoder() -> dynamic.Decoder(Trigger) {
-  dynamic.decode8(
-    Trigger,
-    dynamic.field("id", dynamic.string),
-    dynamic.field("contactId", dynamic.string),
-    dynamic.field("eventId", dynamic.string),
-    dynamic.field("actionId", dynamic.optional(dynamic.string)),
-    dynamic.field("createdAt", dynamic.string),
-    dynamic.field("updatedAt", dynamic.string),
-    dynamic.field("event", dynamic.optional(event_decoder())),
-    dynamic.field("action", dynamic.optional(action_decoder())),
-  )
-}
-
-fn email_decoder() -> dynamic.Decoder(Email) {
-  fn(dyn: dynamic.Dynamic) {
-    let id_dc = dynamic.field("id", dynamic.string)(dyn)
-    let message_id_dc = dynamic.field("messageId", dynamic.string)(dyn)
-    let subject_dc = dynamic.field("subject", dynamic.string)(dyn)
-    let body_dc = dynamic.field("body", dynamic.string)(dyn)
-    let status_dc = dynamic.field("status", dynamic.string)(dyn)
-    let project_id_dc = dynamic.field("projectId", dynamic.string)(dyn)
-    let action_id_dc =
-      dynamic.field("actionId", dynamic.optional(dynamic.string))(dyn)
-    let campaign_id_dc =
-      dynamic.field("campaignId", dynamic.optional(dynamic.string))(dyn)
-    let contact_id_dc = dynamic.field("contactId", dynamic.string)(dyn)
-    let created_at_dc = dynamic.field("createdAt", dynamic.string)(dyn)
-    let updated_at_dc = dynamic.field("updatedAt", dynamic.string)(dyn)
-
-    case
-      id_dc,
-      message_id_dc,
-      subject_dc,
-      body_dc,
-      status_dc,
-      project_id_dc,
-      action_id_dc,
-      campaign_id_dc,
-      contact_id_dc,
-      created_at_dc,
-      updated_at_dc
-    {
-      Ok(id),
-        Ok(message_id),
-        Ok(subject),
-        Ok(body),
-        Ok(status),
-        Ok(project_id),
-        Ok(action_id),
-        Ok(campaign_id),
-        Ok(contact_id),
-        Ok(created_at),
-        Ok(updated_at)
-      -> {
-        Ok(Email(
-          id,
-          message_id,
-          subject,
-          body,
-          status,
-          project_id,
-          action_id,
-          campaign_id,
-          contact_id,
-          created_at,
-          updated_at,
-        ))
-      }
-      a, b, c, d, e, f, g, h, i, j, k -> {
-        Error(
-          list.flatten([
-            all_errors(a),
-            all_errors(b),
-            all_errors(c),
-            all_errors(d),
-            all_errors(e),
-            all_errors(f),
-            all_errors(g),
-            all_errors(h),
-            all_errors(i),
-            all_errors(j),
-            all_errors(k),
-          ]),
-        )
-      }
-    }
-  }
-}
-
-pub fn get_contact_decoder() -> dynamic.Decoder(ExtendedContact) {
-  dynamic.decode7(
-    ExtendedContact,
-    dynamic.field("id", dynamic.string),
-    dynamic.field("email", dynamic.string),
-    dynamic.field("data", dynamic.optional(dynamic.string)),
-    dynamic.field("createdAt", dynamic.string),
-    dynamic.field("updatedAt", dynamic.string),
-    dynamic.field("triggers", dynamic.list(trigger_decoder())),
-    dynamic.field("emails", dynamic.list(email_decoder())),
-  )
-}
-
-pub fn list_contacts_decoder() -> dynamic.Decoder(List(Contact)) {
-  dynamic.list(dynamic.decode6(
-    Contact,
-    dynamic.field("id", dynamic.string),
-    dynamic.field("email", dynamic.string),
-    dynamic.field("subscribed", dynamic.bool),
-    dynamic.field("data", dynamic.optional(dynamic.string)),
-    dynamic.field("createdAt", dynamic.string),
-    dynamic.field("updatedAt", dynamic.string),
+fn action_decoder() -> decode.Decoder(Action) {
+  use id <- decode.field("id", decode.string)
+  use name <- decode.field("name", decode.string)
+  use run_once <- decode.field("runOnce", decode.bool)
+  use delay <- decode.field("delay", decode.int)
+  use project_id <- decode.field("projectId", decode.optional(decode.string))
+  use template_id <- decode.field("templateId", decode.optional(decode.string))
+  use created_at <- decode.field("createdAt", decode.string)
+  use updated_at <- decode.field("updatedAt", decode.string)
+  decode.success(Action(
+    id: id,
+    name: name,
+    run_once: run_once,
+    delay: delay,
+    project_id: project_id,
+    template_id: template_id,
+    created_at: created_at,
+    updated_at: updated_at,
   ))
 }
 
-pub fn count_decoder() -> dynamic.Decoder(Count) {
-  dynamic.decode1(Count, dynamic.field("count", dynamic.int))
+fn event_decoder() -> decode.Decoder(Event) {
+  use id <- decode.field("id", decode.string)
+  use name <- decode.field("name", decode.string)
+  use project_id <- decode.field("projectId", decode.string)
+  use template_id <- decode.field("templateId", decode.optional(decode.string))
+  use campaign_id <- decode.field("campaignId", decode.optional(decode.string))
+  use created_at <- decode.field("createdAt", decode.string)
+  use updated_at <- decode.field("updatedAt", decode.string)
+  decode.success(Event(
+    id: id,
+    name: name,
+    project_id: project_id,
+    template_id: template_id,
+    campaign_id: campaign_id,
+    created_at: created_at,
+    updated_at: updated_at,
+  ))
 }
 
-pub fn created_contact_decoder() -> dynamic.Decoder(CreatedContact) {
-  dynamic.decode7(
-    CreatedContact,
-    dynamic.field("success", dynamic.bool),
-    dynamic.field("id", dynamic.string),
-    dynamic.field("email", dynamic.string),
-    dynamic.field("subscribed", dynamic.bool),
-    dynamic.field("data", dynamic.optional(dynamic.dynamic)),
-    dynamic.field("createdAt", dynamic.string),
-    dynamic.field("updatedAt", dynamic.string),
+fn trigger_decoder() -> decode.Decoder(Trigger) {
+  use id <- decode.field("id", decode.string)
+  use contact_id <- decode.field("contactId", decode.string)
+  use event_id <- decode.field("eventId", decode.string)
+  use action_id <- decode.field("actionId", decode.optional(decode.string))
+  use created_at <- decode.field("createdAt", decode.string)
+  use updated_at <- decode.field("updatedAt", decode.string)
+  use event <- decode.field("event", decode.optional(event_decoder()))
+  use action <- decode.field("action", decode.optional(action_decoder()))
+  decode.success(Trigger(
+    id: id,
+    contact_id: contact_id,
+    event_id: event_id,
+    action_id: action_id,
+    created_at: created_at,
+    updated_at: updated_at,
+    event: event,
+    action: action,
+  ))
+}
+
+fn email_decoder() -> decode.Decoder(Email) {
+  use id <- decode.field("id", decode.string)
+  use message_id <- decode.field("messageId", decode.string)
+  use subject <- decode.field("subject", decode.string)
+  use body <- decode.field("body", decode.string)
+  use status <- decode.field("status", decode.string)
+  use project_id <- decode.field("projectId", decode.string)
+  use action_id <- decode.field("actionId", decode.optional(decode.string))
+  use campaign_id <- decode.optional_field(
+    "campaignId",
+    option.None,
+    decode.optional(decode.string),
   )
+  use contact_id <- decode.field("contactId", decode.string)
+  use created_at <- decode.field("createdAt", decode.string)
+  use updated_at <- decode.field("updatedAt", decode.string)
+  decode.success(Email(
+    id: id,
+    message_id: message_id,
+    subject: subject,
+    body: body,
+    status: status,
+    project_id: project_id,
+    action_id: action_id,
+    campaign_id: campaign_id,
+    contact_id: contact_id,
+    created_at: created_at,
+    updated_at: updated_at,
+  ))
 }
 
-pub fn deleted_contact_decoder() -> dynamic.Decoder(DeletedContact) {
-  dynamic.decode7(
-    DeletedContact,
-    dynamic.field("success", dynamic.bool),
-    dynamic.field("id", dynamic.string),
-    dynamic.field("email", dynamic.string),
-    dynamic.field("subscribed", dynamic.bool),
-    dynamic.field("data", dynamic.optional(dynamic.dynamic)),
-    dynamic.field("createdAt", dynamic.string),
-    dynamic.field("updatedAt", dynamic.string),
-  )
+pub fn get_contact_decoder() -> decode.Decoder(ExtendedContact) {
+  use id <- decode.field("id", decode.string)
+  use email <- decode.field("email", decode.string)
+  use data <- decode.field("data", decode.optional(decode.string))
+  use created_at <- decode.field("createdAt", decode.string)
+  use updated_at <- decode.field("updatedAt", decode.string)
+  use triggers <- decode.field("triggers", decode.list(trigger_decoder()))
+  use emails <- decode.field("emails", decode.list(email_decoder()))
+  decode.success(ExtendedContact(
+    id: id,
+    email: email,
+    data: data,
+    created_at: created_at,
+    updated_at: updated_at,
+    triggers: triggers,
+    emails: emails,
+  ))
 }
 
-pub fn subscription_decoder() -> dynamic.Decoder(Subscription) {
-  dynamic.decode3(
-    Subscription,
-    dynamic.field("success", dynamic.bool),
-    dynamic.field("contact", dynamic.string),
-    dynamic.field("subscribed", dynamic.bool),
-  )
+pub fn list_contacts_decoder() -> decode.Decoder(List(Contact)) {
+  decode.list({
+    use id <- decode.field("id", decode.string)
+    use email <- decode.field("email", decode.string)
+    use subscribed <- decode.field("subscribed", decode.bool)
+    use data <- decode.field("data", decode.optional(decode.string))
+    use created_at <- decode.field("createdAt", decode.string)
+    use updated_at <- decode.field("updatedAt", decode.string)
+    decode.success(Contact(
+      id: id,
+      email: email,
+      subscribed: subscribed,
+      data: data,
+      created_at: created_at,
+      updated_at: updated_at,
+    ))
+  })
 }
 
-fn all_errors(
-  result: Result(a, List(dynamic.DecodeError)),
-) -> List(dynamic.DecodeError) {
-  case result {
-    Ok(_) -> []
-    Error(errors) -> errors
-  }
+pub fn count_decoder() -> decode.Decoder(Count) {
+  use count <- decode.field("count", decode.int)
+  decode.success(Count(count: count))
+}
+
+pub fn created_contact_decoder() -> decode.Decoder(CreatedContact) {
+  use success <- decode.field("success", decode.bool)
+  use id <- decode.field("id", decode.string)
+  use email <- decode.field("email", decode.string)
+  use subscribed <- decode.field("subscribed", decode.bool)
+  use data <- decode.field("data", decode.optional(decode.dynamic))
+  use created_at <- decode.field("createdAt", decode.string)
+  use updated_at <- decode.field("updatedAt", decode.string)
+  decode.success(CreatedContact(
+    success: success,
+    id: id,
+    email: email,
+    subscribed: subscribed,
+    data: data,
+    created_at: created_at,
+    updated_at: updated_at,
+  ))
+}
+
+pub fn deleted_contact_decoder() -> decode.Decoder(DeletedContact) {
+  use success <- decode.field("success", decode.bool)
+  use id <- decode.field("id", decode.string)
+  use email <- decode.field("email", decode.string)
+  use subscribed <- decode.field("subscribed", decode.bool)
+  use data <- decode.field("data", decode.optional(decode.dynamic))
+  use created_at <- decode.field("createdAt", decode.string)
+  use updated_at <- decode.field("updatedAt", decode.string)
+  decode.success(DeletedContact(
+    success: success,
+    id: id,
+    email: email,
+    subscribed: subscribed,
+    data: data,
+    created_at: created_at,
+    updated_at: updated_at,
+  ))
+}
+
+pub fn subscription_decoder() -> decode.Decoder(Subscription) {
+  use success <- decode.field("success", decode.bool)
+  use contact <- decode.field("contact", decode.string)
+  use subscribed <- decode.field("subscribed", decode.bool)
+  decode.success(Subscription(
+    success: success,
+    contact: contact,
+    subscribed: subscribed,
+  ))
 }

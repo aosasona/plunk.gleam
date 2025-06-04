@@ -1,4 +1,4 @@
-import gleam/dynamic
+import gleam/dynamic/decode
 import gleam/http.{Post}
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
@@ -23,14 +23,21 @@ pub type TrackEventResponse {
   )
 }
 
-pub fn track_event_response_decoder() -> dynamic.Decoder(TrackEventResponse) {
-  dynamic.decode4(
-    TrackEventResponse,
-    dynamic.field("success", dynamic.bool),
-    dynamic.field("contact", dynamic.string),
-    dynamic.field("event", dynamic.string),
-    dynamic.optional_field("timestamp", dynamic.string),
+fn track_event_response_decoder() -> decode.Decoder(TrackEventResponse) {
+  use success <- decode.field("success", decode.bool)
+  use contact <- decode.field("contact", decode.string)
+  use event <- decode.field("event", decode.string)
+  use timestamp <- decode.optional_field(
+    "timestamp",
+    option.None,
+    decode.optional(decode.string),
   )
+  decode.success(TrackEventResponse(
+    success: success,
+    contact: contact,
+    event: event,
+    timestamp: timestamp,
+  ))
 }
 
 /// Track events in your application and send them to Plunk. This function returns a Gleam `Request` type that can then be used with any client of your choice.
