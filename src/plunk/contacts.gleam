@@ -1,4 +1,4 @@
-import gleam/dynamic
+import gleam/dynamic/decode
 import gleam/http.{Delete, Get, Post}
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
@@ -198,7 +198,7 @@ pub fn decode(
 fn try_decode(
   res: Response(String),
   to constructor: fn(r) -> ActionResult,
-  using decoder: fn() -> dynamic.Decoder(r),
+  using decoder: fn() -> decode.Decoder(r),
 ) -> Result(ActionResult, PlunkError) {
   use d <- try(bridge.decode(res, decoder))
   Ok(constructor(d))

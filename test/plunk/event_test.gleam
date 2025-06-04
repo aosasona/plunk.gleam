@@ -4,6 +4,7 @@ import gleam/hackney
 import gleam/io
 import gleam/json
 import gleam/result
+import gleam/string
 import gleeunit/should
 import plunk
 import plunk/event.{Event}
@@ -32,11 +33,11 @@ pub fn track_test() {
 
       let assert Ok(data) = d
       should.equal(data.success, True)
-      io.debug(data)
+      io.println_error(data |> string.inspect)
       Nil
     }
     Error(e) -> {
-      io.debug(e)
+      io.println_error(e |> string.inspect)
       should.fail()
     }
   }

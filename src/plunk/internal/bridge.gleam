@@ -1,4 +1,4 @@
-import gleam/dynamic.{type Decoder}
+import gleam/dynamic/decode.{type Decoder}
 import gleam/http
 import gleam/http/request.{type Request, Request}
 import gleam/http/response.{type Response, Response}
@@ -55,14 +55,17 @@ pub fn normalize_path(path: String) -> String {
   }
 }
 
-pub fn error_decoder() -> dynamic.Decoder(PlunkError) {
-  dynamic.decode4(
-    ApiError,
-    dynamic.field("code", of: dynamic.int),
-    dynamic.field("error", of: dynamic.string),
-    dynamic.field("message", of: dynamic.string),
-    dynamic.field("time", of: dynamic.int),
-  )
+pub fn error_decoder() -> Decoder(PlunkError) {
+  use code <- decode.field("code", decode.int)
+  use error <- decode.field("error", decode.string)
+  use message <- decode.field("message", decode.string)
+  use time <- decode.field("time", decode.int)
+  decode.success(ApiError(
+    code: code,
+    error: error,
+    message: message,
+    time: time,
+  ))
 }
 
 /// Convert the Gleam `Response` type returned by the HTTP client into the appropriate type for that action/resource
@@ -73,13 +76,13 @@ pub fn decode(
   let Response(status: status, body: body, ..) = res
   case status {
     status if status >= 200 && status < 300 -> {
-      case json.decode(from: body, using: decoder()) {
+      case json.parse(from: body, using: decoder()) {
         Ok(decoded) -> Ok(decoded)
         Error(err) -> Error(JSONError(err))
       }
     }
     _ -> {
-      case json.decode(from: body, using: error_decoder()) {
+      case json.parse(from: body, using: error_decoder()) {
         Ok(decoded) -> Error(decoded)
         Error(err) -> Error(JSONError(err))
       }

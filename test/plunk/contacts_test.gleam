@@ -7,6 +7,7 @@ import gleam/io
 import gleam/list
 import gleam/option.{Some}
 import gleam/result
+import gleam/string
 import gleeunit/should
 import plunk
 import plunk/contacts
@@ -45,7 +46,7 @@ pub fn get_test() {
 
   case data {
     contacts.GetContactResult(contact) -> {
-      io.debug("ID -> " <> contact.id)
+      io.println_error("ID -> " <> contact.id)
       Nil
     }
     _ -> should.fail()
@@ -75,12 +76,12 @@ pub fn list_test() {
 
   case data {
     contacts.ListContactsResult(contacts) -> {
-      io.debug("-----------------")
-      io.debug("List all contacts")
-      let print = fn(contact: contacts.Contact) { io.debug(contact.id) }
+      io.println_error("-----------------")
+      io.println_error("List all contacts")
+      let print = fn(contact: contacts.Contact) { io.println_error(contact.id) }
       contacts
       |> list.map(print)
-      io.debug("-----------------")
+      io.println_error("-----------------")
       Nil
     }
     _ -> should.fail()
@@ -110,7 +111,7 @@ pub fn count_test() {
 
   case data {
     contacts.CountContactsResult(c) -> {
-      io.debug(
+      io.println_error(
         "Got "
         <> int.to_string(c.count)
         <> " contact"
@@ -152,7 +153,7 @@ pub fn create_test() {
 
   case data {
     contacts.CreateContactResult(contact) -> {
-      io.debug(contact)
+      io.println_error(contact |> string.inspect)
       should.be_true(contact.success)
       Nil
     }
@@ -213,7 +214,7 @@ pub fn subscribe_test() {
 
   case data {
     contacts.SubscriptionResult(sub) -> {
-      io.debug(
+      io.println_error(
         "["
         <> contact.email
         <> " - SUBSCRIBED]"
@@ -250,7 +251,7 @@ pub fn unsubscribe_test() {
 
   case data {
     contacts.SubscriptionResult(sub) -> {
-      io.debug(
+      io.println_error(
         "["
         <> contact.email
         <> " - UNSUBSCRIBED]"
@@ -286,7 +287,7 @@ pub fn delete_test() {
 
   case data {
     contacts.DeleteContactResult(d) -> {
-      io.debug("Deleted contact (" <> d.email <> ")")
+      io.println_error("Deleted contact (" <> d.email <> ")")
       should.be_true(d.success)
       Nil
     }
