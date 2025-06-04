@@ -3,11 +3,9 @@ import dot_env/env
 import gleam/bool
 import gleam/hackney
 import gleam/int
-import gleam/io
 import gleam/list
 import gleam/option.{Some}
 import gleam/result
-import gleam/string
 import gleeunit/should
 import plunk
 import plunk/contacts
@@ -46,7 +44,7 @@ pub fn get_test() {
 
   case data {
     contacts.GetContactResult(contact) -> {
-      io.println_error("ID -> " <> contact.id)
+      echo "ID -> " <> contact.id
       Nil
     }
     _ -> should.fail()
@@ -76,12 +74,7 @@ pub fn list_test() {
 
   case data {
     contacts.ListContactsResult(contacts) -> {
-      io.println_error("-----------------")
-      io.println_error("List all contacts")
-      let print = fn(contact: contacts.Contact) { io.println_error(contact.id) }
-      contacts
-      |> list.map(print)
-      io.println_error("-----------------")
+      contacts |> list.map(fn(contact: contacts.Contact) { echo contact.id })
       Nil
     }
     _ -> should.fail()
@@ -111,15 +104,16 @@ pub fn count_test() {
 
   case data {
     contacts.CountContactsResult(c) -> {
-      io.println_error(
+      echo {
         "Got "
         <> int.to_string(c.count)
         <> " contact"
         <> case c {
           c if c.count > 1 -> "s"
           _ -> ""
-        },
-      )
+        }
+      }
+
       Nil
     }
     _ -> should.fail()
@@ -153,7 +147,7 @@ pub fn create_test() {
 
   case data {
     contacts.CreateContactResult(contact) -> {
-      io.println_error(contact |> string.inspect)
+      echo contact
       should.be_true(contact.success)
       Nil
     }
@@ -214,15 +208,13 @@ pub fn subscribe_test() {
 
   case data {
     contacts.SubscriptionResult(sub) -> {
-      io.println_error(
-        "["
+      echo "["
         <> contact.email
         <> " - SUBSCRIBED]"
         <> " Initial value: "
         <> bool.to_string(contact.subscribed)
         <> ", final value: "
-        <> bool.to_string(sub.subscribed),
-      )
+        <> bool.to_string(sub.subscribed)
       should.be_true(sub.success)
       should.be_true(sub.subscribed)
       Nil
@@ -251,15 +243,14 @@ pub fn unsubscribe_test() {
 
   case data {
     contacts.SubscriptionResult(sub) -> {
-      io.println_error(
-        "["
+      echo "["
         <> contact.email
         <> " - UNSUBSCRIBED]"
         <> " Initial value: "
         <> bool.to_string(contact.subscribed)
         <> ", final value: "
-        <> bool.to_string(sub.subscribed),
-      )
+        <> bool.to_string(sub.subscribed)
+
       should.be_false(sub.subscribed)
       should.be_true(sub.success)
       Nil
@@ -287,7 +278,7 @@ pub fn delete_test() {
 
   case data {
     contacts.DeleteContactResult(d) -> {
-      io.println_error("Deleted contact (" <> d.email <> ")")
+      echo "Deleted contact (" <> d.email <> ")"
       should.be_true(d.success)
       Nil
     }
